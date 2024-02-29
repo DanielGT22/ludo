@@ -1,4 +1,4 @@
-package danielGrujic.ludo.payloads.AuthPayloads;
+package danielGrujic.ludo.payloads.UtentePayloads;
 
 
 import danielGrujic.ludo.entities.Rank;

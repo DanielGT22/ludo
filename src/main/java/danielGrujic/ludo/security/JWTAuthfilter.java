@@ -28,7 +28,7 @@ public class JWTAuthfilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException , IOException {
         String checkRequestToken=request.getHeader("Authorization");
-        if(checkRequestToken==null){
+      if(checkRequestToken==null){
             throw  new UnauthorizedException("token non presente");
         }else{
             String accessToken= checkRequestToken.substring(7);
@@ -48,7 +48,9 @@ public class JWTAuthfilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return new AntPathMatcher().match("/auth/login", request.getServletPath());
+        return new AntPathMatcher().match("/auth/login", request.getServletPath()) ||
+        new AntPathMatcher().match("/auth/register", request.getServletPath());
     }
+
 
 }

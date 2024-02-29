@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,19 @@ public class User  implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Rank rank;
 
+    private int vittorieQuizz;
+    private int vittorieAssosijacije;
+    private int partiteFatteQuizz;
+    private int partiteFatteAssosijacije;
 
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friendsList = new ArrayList<>();
 
     public void setUsername(String username) {
         this.username = username;
@@ -44,6 +57,27 @@ public class User  implements UserDetails {
         this.rank = rank;
     }
 
+    public void setVittorieQuizz(int vittorieQuizz) {
+        this.vittorieQuizz = vittorieQuizz;
+    }
+
+    public void setVittorieAssosijacije(int vittorieAssosijacije) {
+        this.vittorieAssosijacije = vittorieAssosijacije;
+    }
+
+    public void setPartiteFatteQuizz(int partiteFatteQuizz) {
+        this.partiteFatteQuizz = partiteFatteQuizz;
+    }
+
+    public void setPartiteFatteAssosijacije(int partiteFatteAssosijacije) {
+        this.partiteFatteAssosijacije = partiteFatteAssosijacije;
+    }
+
+    public void setFriendsList(List<User> friendsList) {
+        this.friendsList = friendsList;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -52,6 +86,11 @@ public class User  implements UserDetails {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", rank=" + rank +
+                ", vittorieQuizz=" + vittorieQuizz +
+                ", vittorieAssosijacije=" + vittorieAssosijacije +
+                ", partiteFatteQuizz=" + partiteFatteQuizz +
+                ", partiteFatteAssosijacije=" + partiteFatteAssosijacije +
+                ", friendsList=" + friendsList +
                 '}';
     }
 
