@@ -4,6 +4,7 @@ package danielGrujic.ludo.controllers;
 
 import danielGrujic.ludo.entities.User;
 import danielGrujic.ludo.exceptions.BadRequestException;
+import danielGrujic.ludo.exceptions.NotFoundException;
 import danielGrujic.ludo.payloads.UtentePayloads.UtenteRespondDto;
 import danielGrujic.ludo.payloads.UtentePayloads.UtenteUpdateRequestDto;
 import danielGrujic.ludo.repositories.UserRepository;
@@ -12,8 +13,10 @@ import danielGrujic.ludo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +42,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<User> findAll(@RequestParam(defaultValue = "0")int page,
-                              @RequestParam(defaultValue = "10")int size,
+                              @RequestParam(defaultValue = "100")int size,
                               @RequestParam(defaultValue = "uuid")String ordetBy){
         return userService.getAll(page, size, ordetBy);
     }
@@ -79,5 +82,18 @@ public class UserController {
     }
 
 
+    @PostMapping("/me/add-friend/{friendId}")
+    public ResponseEntity<String> addFriendToCurrentUser(
+            @PathVariable("friendId") UUID friendId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String username = userDetails.getUsername();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + username));
+
+        userService.addFriend(currentUser.getUuid(), friendId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Friend added successfully.");
+    }
 
 }

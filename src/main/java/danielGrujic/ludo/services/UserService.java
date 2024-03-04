@@ -62,4 +62,18 @@ public class UserService {
                 friendsUuids // Set the friendsUuids field
         );
     }
+
+    public void addFriend(UUID userUuid, UUID friendUuid) {
+        User user = userRepository.findByUuid(userUuid)
+                .orElseThrow(() -> new NotFoundException("User not found with UUID: " + userUuid));
+
+        User friend = userRepository.findByUuid(friendUuid)
+                .orElseThrow(() -> new NotFoundException("Friend not found with UUID: " + friendUuid));
+
+        List<User> friendsList = user.getFriendsList();
+        friendsList.add(friend);
+        user.setFriendsList(friendsList);
+
+        userRepository.save(user);
+    }
 }

@@ -33,7 +33,7 @@ public class AsosijacijaController {
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Page<Asosijacija> findAll(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
+                                     @RequestParam(defaultValue = "100") int size,
                                      @RequestParam(defaultValue = "uuid") String ordetBy) {
         return asosijacijeService.getAll(page, size, ordetBy);
     }
